@@ -1,6 +1,6 @@
 from tkinter import *
 from tkinter import ttk
-from PIL import *
+from PIL import Image,ImageTk
 from tkinter.ttk import Combobox
 from tkinter import filedialog
 import pyttsx3
@@ -9,6 +9,14 @@ from googletrans import Translator,LANGUAGES
 root = Tk()
 
 engine=pyttsx3.init()
+
+def statusbr():
+    statusbar.set("Processing.....")
+    sbar.update()
+    import time
+    time.sleep(0.5)
+    statusbar.set("Ready")
+    
 
 def speaknow():
     text=text_area.get(1.0,END)
@@ -34,9 +42,11 @@ def speaknow():
              setvoice()
          elif (speed == 'Normal'):
              engine.setProperty('rate',150)
+             statusbr()
              setvoice()
          else:
              engine.setProperty('rate',60)
+             statusbr()
              setvoice()
             
 
@@ -121,6 +131,11 @@ imageicon4=ImageTk.PhotoImage(imageicon3)
 btnsavee=Button(root,text="Download",compound=LEFT,image=imageicon4,bg="blue",width=170,font="Helvetica 15 bold",relief=GROOVE,command=download)
 btnsavee.place(x=765,y=260)
 
+statusbar=StringVar()
+statusbar.set("Ready")
+sbar=Label(root,textvariable=statusbar,relief=RIDGE,anchor="w")
+sbar.pack(side=BOTTOM,fill=X)
+Button(root,text="Upload",command=statusbr)
 
 
 
