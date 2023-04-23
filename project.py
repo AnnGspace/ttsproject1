@@ -6,7 +6,13 @@ from tkinter import filedialog
 import pyttsx3
 import os
 from googletrans import Translator,LANGUAGES
+import tkinter.messagebox as msg
 root = Tk()
+
+
+def popup():
+    msg.showinfo("Download", "Want to save it?")
+
 
 engine=pyttsx3.init()
 
@@ -51,6 +57,7 @@ def speaknow():
             
 
 def download():
+    popup()
     text=text_area.get(1.0,END)
     gender=gender_combobox.get()
     speed=speed_combobox.get()
@@ -141,4 +148,5 @@ Button(root,text="Upload",command=statusbr)
 
 
 root.mainloop()
+
 
