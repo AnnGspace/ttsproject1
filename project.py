@@ -1,17 +1,39 @@
 from tkinter import *
 from tkinter import ttk
-from PIL import Image,ImageTk
+from PIL import ImageTk,Image
 from tkinter.ttk import Combobox
 from tkinter import filedialog
 import pyttsx3
 import os
 from googletrans import Translator,LANGUAGES
-import tkinter.messagebox as msg
 root = Tk()
 
 
+list_lang= list(LANGUAGES.values())
+
+language_options = ttk.Combobox(root, value=list_lang)
+language_options.set("en")
+language_options.place(x=660,y=400)
+
+output_text=StringVar()
+
 def popup():
     msg.showinfo("Download", "Want to save the audio?")
+
+def translate_text():
+    # Get the text to be translated and the destination language from the user interface
+    text_to_translate = text_area.get(1.0,END).strip()
+    destination_language = language_options.get()
+
+    # Translate the text using Googletrans
+    translator = Translator()
+    translated = translator.translate(text_to_translate, dest=language_options.get())
+    output_text=translated.text
+    print(output_text)
+
+    # Set the translated text in the output area
+    #translated_output.delete(1.0, END)
+    #translated_output.insert(END, translated.text)
 
 
 engine=pyttsx3.init()
@@ -22,10 +44,13 @@ def statusbr():
     import time
     time.sleep(0.5)
     statusbar.set("Ready")
-    
 
 def speaknow():
-    text=text_area.get(1.0,END)
+    text_to_translate = text_area.get(1.0,END).strip()
+    destination_language = language_options.get()
+    translator = Translator()
+    translated = translator.translate(text_to_translate, dest=language_options.get()).text
+    text=output_text
     gender=gender_combobox.get()
     speed=speed_combobox.get()
     voice=engine.getProperty('voices')
@@ -35,11 +60,11 @@ def speaknow():
     def setvoice():
         if(gender == 'Female'):
             engine.setProperty('voice',voice[1].id)
-            engine.say(text)
+            engine.say(translated)
             engine.runAndWait()
         else:
             engine.setProperty('voice',voice[0].id)
-            engine.say(text)
+            engine.say(translated)
             engine.runAndWait()
             
     if(text):
@@ -144,6 +169,7 @@ sbar=Label(root,textvariable=statusbar,relief=RIDGE,anchor="w")
 sbar.pack(side=BOTTOM,fill=X)
 Button(root,text="Upload",command=statusbr)
 
+Label(root,text="Choose prefered language",font="Helvetica 21 bold",bg="light blue", fg="white").place(x=530,y=345)
 
 
 
